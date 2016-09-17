@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>FFJSON.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>FFJSON.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f1"
+                     displayName="TestFFJSON"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>ExtensionTest.ffjson</itemPath>
+        <itemPath>MultiLevelInheritance.ffjson</itemPath>
+        <itemPath>MultiLineArray.ffjson</itemPath>
+        <itemPath>tests/TestFFJSON.cpp</itemPath>
+        <itemPath>UpdateTest.json</itemPath>
+        <itemPath>example.json</itemPath>
+        <itemPath>sample.ffjson</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>11</standard>
+          <incDir>
+            <pElem>/usr/local/include/ferryfair</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lbase</linkerOptionItem>
+            <linkerOptionItem>-llogger</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="ExtensionTest.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FFJSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FFJSON.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MultiLevelInheritance.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MultiLineArray.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UpdateTest.json" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="example.json" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="sample.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/TestFFJSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>11</standard>
+          <incDir>
+            <pElem>/usr/local/include/ferryfair</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lbase</linkerOptionItem>
+            <linkerOptionItem>-llogger</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="ExtensionTest.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FFJSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FFJSON.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MultiLevelInheritance.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MultiLineArray.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UpdateTest.json" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="example.json" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="sample.ffjson" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/TestFFJSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
