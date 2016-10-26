@@ -88,6 +88,18 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerAddLib>
+            <pElem>dist/Debug/GNU-Linux</pElem>
+          </linkerAddLib>
+          <linkerDynSerch>
+            <pElem>dist/Debug/GNU-Linux</pElem>
+          </linkerDynSerch>
+          <linkerLibItems>
+            <linkerOptionItem>-lFFJSON</linkerOptionItem>
+            <linkerOptionItem>-llogger</linkerOptionItem>
+            <linkerOptionItem>-lbase</linkerOptionItem>
+            <linkerOptionItem>-lssl -lpthread -lxml2 -lcrypto -lz -lrt</linkerOptionItem>
+          </linkerLibItems>
         </linkerTool>
       </folder>
       <item path="sample.ffjson" ex="false" tool="3" flavor2="0">

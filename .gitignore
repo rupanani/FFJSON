@@ -1,6 +1,8 @@
 .bzrignore
 .bzr/
 build/
+QtBuild/
+CMakeLists.txt.user
 dist/
 nbproject/private/private.xml
 .DS_Store

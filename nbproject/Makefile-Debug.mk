@@ -86,7 +86,7 @@ ${OBJECTDIR}/FFJSON.o: FFJSON.cpp
 
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/TestFFJSON.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} 
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} -Ldist/Debug/GNU-Linux -Wl,-rpath,dist/Debug/GNU-Linux -lFFJSON -llogger -lbase -lssl -lpthread -lxml2 -lcrypto -lz -lrt 
 
 
 ${TESTDIR}/tests/TestFFJSON.o: tests/TestFFJSON.cpp 

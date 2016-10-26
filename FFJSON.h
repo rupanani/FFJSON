@@ -21,6 +21,7 @@
 #include <list>
 #include <set>
 #include <stdint.h>
+#include <cstring>
 
 using namespace std;
 
@@ -114,7 +115,7 @@ public:
 		Iterator(const FFJSON& orig, bool end = false);
 		Iterator(map<string, FFJSON*>::iterator pi);
 		Iterator(vector<FFJSON*>::iterator ai);
-		Iterator(vector<map<string, FFJSON*>::iterator >::iterator pai);
+        Iterator(vector<map<string, FFJSON*>::iterator >::iterator pai, vector<map<string,FFJSON*>::iterator>* pMapItVec);
 		virtual ~Iterator();
 		void init(const FFJSON& orig, bool end = false);
 		Iterator& operator++();
@@ -140,58 +141,63 @@ public:
 		 */
 		int GetIndex(const FFJSON& rCurrArray);
 
-	private:
-		uint8_t type;
+    private:
+        uint8_t type;
 		void copy(const Iterator& i);
 
-		union IteratorUnion {
-			map<string, FFJSON*>::iterator pi;
-			vector<FFJSON*>::iterator ai;
-			vector<map<string, FFJSON*>::iterator >::iterator pai;
+        union IteratorUnion {
+            map<string, FFJSON*>::iterator pi;
+            vector<FFJSON*>::iterator ai;
+            vector<map<string, FFJSON*>::iterator >::iterator pai;
 
-			IteratorUnion() {
-				memset(this, 0, sizeof (IteratorUnion));
-			}
+            IteratorUnion() {
+                memset(this, 0, sizeof (IteratorUnion));
+            }
 
-			IteratorUnion(const IteratorUnion& rFIt) {
-				memcpy(this, &rFIt, sizeof (IteratorUnion));
-			}
+            IteratorUnion(const IteratorUnion& rFIt) {
+                memcpy(this, &rFIt, sizeof (IteratorUnion));
+            }
 
-			IteratorUnion(IteratorUnion&& rFIt) {
-				memcpy(this, &rFIt, sizeof (IteratorUnion));
-			}
+            IteratorUnion(IteratorUnion&& rFIt) {
+                memcpy(this, &rFIt, sizeof (IteratorUnion));
+            }
 
-			~IteratorUnion() {
-			}
+            ~IteratorUnion() {
+            }
 
-			IteratorUnion(const vector<map<string, FFJSON*>::iterator >::iterator&
-					itMapVector) {
-				pai = itMapVector;
-			}
+            IteratorUnion(const vector<map<string, FFJSON*>::iterator >::iterator&
+                    itMapVector) {
+                pai = itMapVector;
+            }
 
-			IteratorUnion(const vector<FFJSON*>::iterator& itVec) {
-				ai = itVec;
-			}
+            IteratorUnion(const vector<FFJSON*>::iterator& itVec) {
+                ai = itVec;
+            }
 
-			IteratorUnion(const map<string, FFJSON*>::iterator& itMap) {
-				pi = itMap;
-			}
+            IteratorUnion(const map<string, FFJSON*>::iterator& itMap) {
+                pi = itMap;
+            }
 
-			IteratorUnion& operator=(const IteratorUnion& rFIt) {
-				memcpy(this, &rFIt, sizeof (IteratorUnion));
-				return *this;
-			}
+            IteratorUnion& operator=(const IteratorUnion& rFIt) {
+                memcpy(this, &rFIt, sizeof (IteratorUnion));
+                return *this;
+            }
 
-			IteratorUnion& operator=(IteratorUnion&& rFIt) {
-				memcpy(this, &rFIt, sizeof (IteratorUnion));
-				return *this;
-			}
+            IteratorUnion& operator=(IteratorUnion&& rFIt) {
+                memcpy(this, &rFIt, sizeof (IteratorUnion));
+                return *this;
+            }
 
-			friend bool operator<(const IteratorUnion& lhs, const IteratorUnion&
-					rhs) {
-				return true;
-			}
-		} ui;
+            friend bool operator<(const IteratorUnion& lhs, const IteratorUnion&
+                    rhs) {
+                return true;
+            }
+        } ui;
+        union ContainerPs{
+            map<string, FFJSON*>* m_pMap;
+            vector<FFJSON*>* m_pVector;
+            vector<map<string, FFJSON*>::iterator>* m_pMapVector;
+        } m_uContainerPs;
 	};
 
 	struct FeaturedMemHook;
@@ -252,10 +258,11 @@ public:
 		FFJSON* base = NULL;
 	};
 
-	struct FFJSONPObj {
-		const string* name;
+    struct FFJSONPObj {
+        const string* name;
 		FFJSON* value = NULL;
-		FFJSONPObj* pObj = NULL;
+        FFJSONPObj* pObj = NULL;
+        vector<map<string, FFJSON*>::iterator>* m_pvpsMapSequence;
 	};
 
 	struct FFJSONPrettyPrintPObj : FFJSONPObj {
@@ -555,7 +562,7 @@ public:
 
 	template<typename T>
 	operator T&() {
-		if (isType(BINARY) && size == sizeof (T)) {
+        if (isType(BINARY) && size == sizeof(T)) {
 			return *reinterpret_cast<T*> (val.vptr);
 		}
 		return *reinterpret_cast<T*> (NULL);
