@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+includedir=${prefix}/include/@Umbrella@
+libdir=${exec_prefix}/lib
+
+Name: @PROJECT_NAME@
+Description: Logging functions that provides formatting and timestamping
+Version: @base_VERSION_MAJOR@.@base_VERSION_MINOR@
+Cflags: -I${includedir}
+Libs: -L${libdir} -l@PROJECT_NAME@
