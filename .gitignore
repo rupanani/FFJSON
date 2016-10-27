@@ -2,7 +2,8 @@
 .bzr/
 build/
 QtBuild/
-CMakeLists.txt.user
+BuildXcode/
+*.user
 dist/
 nbproject/private/private.xml
 .DS_Store

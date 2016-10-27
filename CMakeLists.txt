@@ -1,8 +1,12 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.6)
 project (FFJSON)
 set (FFJSON_VERSION_MAJOR 1)
 set (FFJSON_VERSION_MINOR 0)
 set (Umbrella "ferryfair")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+# Mac OS X specific code
+SET(macOS ON)
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -18,13 +22,17 @@ configure_file(
 include_directories("${PROJECT_BINARY_DIR}")
 
 set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14 -O0")
-set (GCC_COVERAGE_LINK_FLAGS "-lbase -llogger")
+set (GCC_COVERAGE_LINK_FLAGS "")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} "/usr/local/include/ferryfair")
+link_directories(/usr/local/lib)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+file(GLOB HEADERS *.h)
 file(GLOB SOURCES *.cpp)
-add_library(FFJSONStatic STATIC ${SOURCES})
-add_library(FFJSON SHARED ${SOURCES})
+add_library(FFJSONStatic STATIC ${SOURCES} ${HEADERS})
+add_library(FFJSON SHARED ${SOURCES} ${HEADERS})
+target_link_libraries(FFJSONStatic logger base)
+target_link_libraries(FFJSON logger base)
 set_target_properties(FFJSONStatic PROPERTIES OUTPUT_NAME FFJSON)
 set_target_properties(FFJSON
     PROPERTIES
@@ -37,7 +45,6 @@ set_target_properties(FFJSONStatic
     SOVERSION ${FFJSON_VERSION_MAJOR}
     )
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
-file(GLOB HEADERS *.h)
 install(FILES ${HEADERS} DESTINATION include/${Umbrella})
 install(FILES "${PROJECT_BINARY_DIR}/FFJSONConfig.h"
     DESTINATION include/${Umbrella})
@@ -65,14 +72,20 @@ add_executable(TestFFJSON
     UpdateTest.json
     example.json
     )
-target_link_libraries(TestFFJSON FFJSON logger base ssl pthread xml2 crypto z rt)
+target_link_libraries(TestFFJSON FFJSON logger base ssl pthread xml2 crypto z)
+if(!macOS)
+target_link_libraries(TestFFJSON rt)
+endif(!macOS)
 target_include_directories(TestFFJSON PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/${Umbrella}>
     )
 
 add_executable(IteratorIncrement tests/iteratorincrement.cpp)
-target_link_libraries(IteratorIncrement FFJSON logger base ssl pthread xml2 crypto z rt)
+target_link_libraries(IteratorIncrement FFJSON logger base ssl pthread xml2 crypto z)
+if(!macOS)
+target_link_libraries(IteratorIncrement rt)
+endif(!macOS)
 target_include_directories(IteratorIncrement PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/${Umbrella}>

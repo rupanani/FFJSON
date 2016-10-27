@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <logger.h>
+#include <base/FerryTimeStamp.h>
 #include <base/mystdlib.h>
 #include <string>
 #include <fstream>
@@ -354,11 +355,12 @@ int main(int argc, char** argv) {
 	std::cout << "%SUITE_STARTING% TestFFJSON" << std::endl;
 	std::cout << "%SUITE_STARTED%" << std::endl;
 
-	timespec tsStart = {0, 0};
-	timespec tsEnd = {0, 0};
-	timespec tsDiff = {0, 0};
-	timespec tsSuiteStart = {0, 0};
-	clock_gettime(CLOCK_REALTIME, &tsSuiteStart);
+	FerryTimeStamp ftsStart;
+	FerryTimeStamp ftsEnd;
+	FerryTimeStamp ftsDiff;
+	FerryTimeStamp ftsSuiteStart;
+    FerryTimeStamp ftsSuiteEnd;
+    ftsSuiteStart.Update();
 
 //	std::cout << "%TEST_STARTED% test1 (TestFFJSON)" << std::endl;
 //	tsStart = {0, 0};
@@ -411,14 +413,11 @@ int main(int argc, char** argv) {
 //			tsDiff.tv_nsec << " test5 (TestFFJSON)" << std::endl;
 
     std::cout << "%TEST_STARTED% test6 (TestFFJSON)\n" << std::endl;
-    tsStart = {0, 0};
-    clock_gettime(CLOCK_REALTIME, &tsStart);
+    ftsStart.Update();
     test6();
-    tsEnd = {0, 0};
-    clock_gettime(CLOCK_REALTIME, &tsEnd);
-    tsDiff = UTimeDiff(tsEnd, tsStart);
-    std::cout << "%TEST_FINISHED% time=" << tsDiff.tv_sec << "." <<
-                 tsDiff.tv_nsec << " test6 (TestFFJSON)" << std::endl;
+    ftsEnd.Update();
+    ftsDiff = ftsEnd-ftsStart;
+    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test6 (TestFFJSON)" << std::endl;
 
 //	std::cout << "%TEST_STARTED% test7 (TestFFJSON)\n" << std::endl;
 //	tsStart = {0, 0};
@@ -472,20 +471,15 @@ int main(int argc, char** argv) {
 //			tsDiff.tv_nsec << " test9 " << std::endl;
 
     std::cout << "%TEST_STARTED% test12\n" << std::endl;
-    tsStart = {0, 0};
-    clock_gettime(CLOCK_REALTIME, &tsStart);
+    ftsStart.Update();
     test12();
-    tsEnd = {0, 0};
-    clock_gettime(CLOCK_REALTIME, &tsEnd);
-    tsDiff = UTimeDiff(tsEnd, tsStart);
-    std::cout << "%TEST_FINISHED% time=" << tsDiff.tv_sec << "." <<
-                 tsDiff.tv_nsec << " test9 " << std::endl;
+    ftsEnd.Update();
+    ftsDiff = ftsEnd - ftsStart;
+    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test9 " << std::endl;
 
-	timespec tsSuiteEnd = {0, 0};
-	clock_gettime(CLOCK_REALTIME, &tsSuiteEnd);
-	tsDiff = UTimeDiff(tsSuiteEnd, tsSuiteStart);
-	std::cout << "%SUITE_FINISHED% time=" << tsDiff.tv_sec << "." <<
-			tsDiff.tv_nsec << std::endl;
+    ftsSuiteEnd.Update();
+	ftsDiff = ftsSuiteEnd-ftsSuiteStart;
+	std::cout << "%SUITE_FINISHED% time=" << ftsDiff << std::endl;
 
 	return (EXIT_SUCCESS);
 }

@@ -16,8 +16,6 @@
 #endif
 #include <math.h>
 #include <string.h>
-#include <openssl/bio.h>
-#include <openssl/evp.h>
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -25,14 +23,14 @@
 #include <map>
 #include <exception>
 #include <algorithm>
-#include <base/mystdlib.h>
+#include <base/FerryTimeStamp.h>
 #include <base/myconverters.h>
 #include <logger.h>
 #include <stdexcept>
 
 #include "FFJSON.h"
 
-_ff_log_type fflAllowedType = (_ff_log_type) (FFL_NOTICE | FFL_WARN | FFL_ERR |
+FF_LOG_TYPE fflAllowedType = (FF_LOG_TYPE) (FFL_NOTICE | FFL_WARN | FFL_ERR |
 		FFL_DEBUG);
 unsigned int fflAllowedLevel = FFJ_MAIN;
 
@@ -3298,8 +3296,8 @@ skiporig:
 			}
 			if (queryObject->isQType(UPDATE) && j != queryObject->val.pairs
 					->end()) {
-				ffl_err(FFJ_MAIN, "QueryObject order didn't match. QueryObject",
-						queryObject->stringify());
+				ffl_err(FFJ_MAIN, "QueryObject order didn't match. QueryObject:%s",
+						queryObject->stringify().c_str());
 			}
 		} else if (queryObject->isType(ARRAY)) {
 			if (queryObject->size == size) {
