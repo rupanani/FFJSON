@@ -1,16 +1,5 @@
 {
-	"ubuntu": {
-		"cameras": {
-			"video0": {
-				"bufferDuration": 10,
-				"state": "CAM_OFF",
-				"newState": "",
-				"(Time)NewState": 0000000000.000000000
-			}
-		},
-		"signalstrength": -1,
-		"location": "hyderabad",
-		"ip": ""
-	}
-}
+                    "newState": "",
+                "(Time)NewState": 0000000000.000000000
+ }
 

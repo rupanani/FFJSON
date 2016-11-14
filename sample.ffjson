@@ -69,7 +69,7 @@
 			written the ultimate parser :)
 	",
 
-	example: file:///home/gowtham/workspace/FFJSON/example.json,
+	example: file://example.json,
 	link: summary,
 	subjects: [	    "Maths",	"Physics",	"Telugu",	"Social"],
 	studentsMarks: [

@@ -489,7 +489,10 @@ void FFJSON::init(const string& ffjson, int* ci, int indent, FFJSONPObj* pObj) {
 											&& objId[5] == ')') {
 										LinkNRef lnr = GetLinkString(pObj);
                                         string sLink = lnr.m_sLink + (*fmMapSequence.m_pvpsMapSequence)[size-2]->first;
-										MarkAsUpdatable(sLink, *lnr.m_pRef);
+                                        FFJSON* pOverLooker=MarkAsUpdatable(sLink, *(lnr.m_pRef?lnr.m_pRef:this));
+                                        FeaturedMember fm;
+                                        fm.m_pTimeStamp=obj->val.m_pFerryTimeStamp;
+                                        pOverLooker->insertFeaturedMember(fm, FM_UPDATE_TIMESTAMP);
 									}
 								default:
 									comment = false;
@@ -1283,6 +1286,32 @@ void FFJSON::insertFeaturedMember(FeaturedMember& fms, FeaturedMemType fMT) {
 		}
 		iFMTraversed++;
 	}
+    if (isQType(UPDATE)) {
+        if (fMT == FM_UPDATE_TIMESTAMP) {
+            if (pFMS->m_pTimeStamp == NULL) {
+                pFMS->m_pTimeStamp = fms.m_pTimeStamp;
+            } else {
+                FeaturedMemHook* pNewFMH = new FeaturedMemHook();
+                pNewFMH->m_pFMH.m_pFMH = pFMS->m_pFMH;
+                pNewFMH->m_uFM.m_pTimeStamp = fms.m_pTimeStamp;
+                pFMS->m_pFMH = pNewFMH;
+            }
+            iFMCount++;
+            setFMCount(iFMCount);
+            return;
+        } else {
+            if (iFMCount - iFMTraversed == 1) {
+                //Should insert New FM hook before the right FMType match
+                FeaturedMemHook* pNewFMH = new FeaturedMemHook();
+                pNewFMH->m_uFM.m_pTimeStamp = pFMS->m_pTimeStamp;
+                pFMS->m_pFMH = pNewFMH;
+                pFMS = &pNewFMH->m_pFMH;
+            } else {
+                pFMS = &pFMS->m_pFMH->m_pFMH;
+            }
+        }
+        iFMTraversed++;
+    }
 }
 
 FFJSON::FeaturedMember FFJSON::getFeaturedMember(FeaturedMemType fMT) const {
@@ -1403,6 +1432,22 @@ FFJSON::FeaturedMember FFJSON::getFeaturedMember(FeaturedMemType fMT) const {
 		}
 		iFMTraversed++;
 	}
+    if (isQType(UPDATE)) {
+        if (fMT == FM_UPDATE_TIMESTAMP) {
+            if (iFMCount - iFMTraversed == 1) {
+                return *pFMS;
+            } else {
+                return pFMS->m_pFMH->m_uFM;
+            }
+        } else {
+            if (iFMCount - iFMTraversed == 1) {
+                return decoyFM;
+            } else {
+                pFMS = &pFMS->m_pFMH->m_pFMH;
+            }
+        }
+        iFMTraversed++;
+    }
 	return decoyFM;
 }
 
@@ -1412,97 +1457,107 @@ void DeleteChildLinks(vector<FFJSON*>* childLinks) {
 	}
 }
 
-void FFJSON::destroyAllFeaturedMembers() {
-	FeaturedMember fmHolder = m_uFM;
+void FFJSON::destroyAllFeaturedMembers(bool bExemptQueries) {
 	uint32_t iFMCount = flags >> 28;
-	uint32_t iFMTraversed = 0;
 	if (isType(STRING) && isEFlagSet(STRING_INIT)) {
-		if (iFMCount - iFMTraversed == 1) {
+		if (iFMCount == 1) {
 			//Deletion of the multilinebuf is responsibility of me
 			//delete fmHolder.m_psMultiLnBuffer;
 		} else {
 			//Deletion of the multilinebuf is responsibility of me
 			//delete fmHolder.m_pFMH->m_uFM.m_psMultiLnBuffer;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		clearEFlag(STRING_INIT);
-		iFMTraversed++;
+        iFMCount--;
+        clearEFlag(STRING_INIT);
 	}
 	if (isType(STRING)) {
-		if (iFMCount - iFMTraversed == 1) {
-			fmHolder.width = 0;
+		if (iFMCount == 1) {
+			m_uFM.width = 0;
 		} else {
-			fmHolder.m_pFMH->m_uFM.width = 0;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			m_uFM.m_pFMH->m_uFM.width = 0;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
+        iFMCount--;
 		setType(UNDEFINED);
-		iFMTraversed++;
 	}
 	if (isType(OBJECT)) {
-		if (iFMCount - iFMTraversed == 1) {
-			delete fmHolder.m_pvpsMapSequence;
+		if (iFMCount == 1) {
+			delete m_uFM.m_pvpsMapSequence;
 		} else {
-			delete fmHolder.m_pFMH->m_uFM.m_pvpsMapSequence;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			delete m_uFM.m_pFMH->m_uFM.m_pvpsMapSequence;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		iFMTraversed++;
+        iFMCount--;
 	}
 	if (isEFlagSet(EXT_VIA_PARENT) && !isType(STRING)) {
-		if (iFMCount - iFMTraversed == 1) {
+		if (iFMCount == 1) {
 			if (isEFlagSet(EXTENDED) && getType() != NUMBER) {
-				delete fmHolder.tabHead;
+				delete m_uFM.tabHead;
 			}
 		} else {
 			if (isEFlagSet(EXTENDED) && getType() != NUMBER) {
-				delete fmHolder.m_pFMH->m_uFM.tabHead;
+				delete m_uFM.m_pFMH->m_uFM.tabHead;
 			}
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		iFMTraversed++;
+        iFMCount--;
 	}
 	if (isType(LINK)) {
-		if (iFMCount - iFMTraversed == 1) {
-			delete fmHolder.link;
+		if (iFMCount == 1) {
+			delete m_uFM.link;
 		} else {
-			delete fmHolder.m_pFMH->m_uFM.tabHead;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			delete m_uFM.m_pFMH->m_uFM.tabHead;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		iFMTraversed++;
+        iFMCount--;
 	}
 	if (isEFlagSet(EXTENDED) && (isType(OBJECT) || isType(ARRAY))) {
-		if (iFMCount - iFMTraversed == 1) {
-			delete fmHolder.m_pParent;
+		if (iFMCount == 1) {
+			delete m_uFM.m_pParent;
 		} else {
-			delete fmHolder.m_pFMH->m_uFM.m_pParent;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			delete m_uFM.m_pFMH->m_uFM.m_pParent;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		iFMTraversed++;
+        iFMCount--;
 	}
 	if (isEFlagSet(HAS_CHILDREN) && (isType(OBJECT) || isType(ARRAY))) {
-		if (iFMCount - iFMTraversed == 1) {
-			DeleteChildLinks(fmHolder.m_pvChildren);
-			delete fmHolder.m_pvChildren;
+		if (iFMCount == 1) {
+			DeleteChildLinks(m_uFM.m_pvChildren);
+			delete m_uFM.m_pvChildren;
 		} else {
-			DeleteChildLinks(fmHolder.m_pFMH->m_uFM.m_pvChildren);
-			delete fmHolder.m_pFMH->m_uFM.m_pvChildren;
-			FeaturedMemHook* pFMHHolder = fmHolder.m_pFMH;
-			fmHolder = fmHolder.m_pFMH->m_pFMH;
+			DeleteChildLinks(m_uFM.m_pFMH->m_uFM.m_pvChildren);
+			delete m_uFM.m_pFMH->m_uFM.m_pvChildren;
+			FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+			m_uFM = m_uFM.m_pFMH->m_pFMH;
 			delete pFMHHolder;
 		}
-		iFMTraversed++;
+        iFMCount--;
 	}
+    if (isQType(UPDATE) && !bExemptQueries) {
+        if (iFMCount == 1) {
+            m_uFM.m_pTimeStamp=NULL;
+        } else {
+            m_uFM.m_pFMH->m_uFM.m_pTimeStamp=NULL;
+            FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+            m_uFM = m_uFM.m_pFMH->m_pFMH;
+            delete pFMHHolder;
+        }
+        iFMCount--;
+    }
+    setFMCount(iFMCount);
 }
 
 void FFJSON::deleteFeaturedMember(FeaturedMemType fmt) {
@@ -1784,7 +1839,7 @@ FFJSON::~FFJSON() {
 	freeObj();
 }
 
-void FFJSON::freeObj() {
+void FFJSON::freeObj(bool bAssignment) {
 	switch (getType()) {
 		case OBJ_TYPE::OBJECT:
 		{
@@ -1820,8 +1875,11 @@ void FFJSON::freeObj() {
 			delete val.m_pFerryTimeStamp;
 	}
 	if (m_uFM.m_pFMH != NULL) {
-		destroyAllFeaturedMembers();
+		destroyAllFeaturedMembers(bAssignment);
 	}
+    val.fptr=0;
+    size=0;
+    flags&=bAssignment?0xF000FF00:0;
 }
 
 void FFJSON::trimWhites(string & s) {
@@ -2714,7 +2772,11 @@ FFJSON::operator FFJSON&() {
 }
 
 FFJSON& FFJSON::operator=(const char* s) {
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+    freeObj(true);
 	int i = 0;
 	int j = strlen(s);
 	if (s[0] == '<') {
@@ -2800,6 +2862,7 @@ FFJSON& FFJSON::operator=(const char* s) {
 		insertFeaturedMember(fmWidth, FM_WIDTH);
 		val.string[size] = '\0';
 	}
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const string& s) {
@@ -2890,61 +2953,94 @@ FFJSON & FFJSON::operator=(const string& s) {
 		insertFeaturedMember(fmWidth, FM_WIDTH);
 		val.string[size] = '\0';
 	}*/
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const int& i) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = i;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const FFJSON& f) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	copy(f, COPY_ALL);
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(FFJSON* f) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(LINK);
 	val.fptr = f;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const double& d) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = d;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const float& f) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = f;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const long& l) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = l;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const short& s) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = s;
+    return *this;
 }
 
 FFJSON & FFJSON::operator=(const unsigned int& i) {
-
-	freeObj();
+    if(isQType(UPDATE)){
+        FeaturedMember fm=getFeaturedMember(FM_UPDATE_TIMESTAMP);
+        fm.m_pTimeStamp->Update();
+    }
+	freeObj(true);
 	setType(NUMBER);
 	val.number = i;
+    return *this;
 }
 
 void FFJSON::trim() {
@@ -3165,11 +3261,17 @@ FFJSON * FFJSON::answerObject(FFJSON * queryObject, FFJSONPObj* pObj,
                             pObj->value->find(*pObj->name);
                     ++itUpdateTime;
 					if (itUpdateTime.GetIndex().find("(Time)") == 0) {
-                        if (((int&)(*itUpdateTime))) {
-							queryObject->setQType(UPDATE);
+                        if (((FerryTimeStamp&)(*itUpdateTime)>=lastUpdateTime)) {
+							if(queryObject->isType(OBJECT)||queryObject->isType(ARRAY))
+                                queryObject->setQType(UPDATE);
+                            else
+                                queryObject->setQType(QUERY);
 						}
 					} else {
-						queryObject->setQType(UPDATE);
+                        if(queryObject->isType(OBJECT)||queryObject->isType(ARRAY))
+                            queryObject->setQType(UPDATE);
+                        else
+                            queryObject->setQType(QUERY);
 					}
 				}
 			}

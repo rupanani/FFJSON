@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.5)
 project (FFJSON)
+IF (DEFINED _DEBUG)
+ADD_DEFINITIONS(-D_DEBUG=${_DEBUG})
+ENDIF()
 set (FFJSON_VERSION_MAJOR 1)
 set (FFJSON_VERSION_MINOR 0)
 set (Umbrella "ferryfair")

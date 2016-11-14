@@ -24,6 +24,11 @@
 
 using namespace std;
 
+enum FFJ_LOG {
+    FFJ_MAIN
+};
+
+
 class FFJSON {
 public:
 
@@ -87,7 +92,8 @@ public:
 		FM_PARENT = 3,
 		FM_CHILDREN = 4,
 		FM_MAP_SEQUENCE = 5,
-		FM_MULTI_LN = 6
+		FM_MULTI_LN = 6,
+        FM_UPDATE_TIMESTAMP = 7
 	};
 
 	class Exception : exception {
@@ -241,6 +247,7 @@ public:
 		}
 		{
 		}
+        FerryTimeStamp* m_pTimeStamp;
 	};
 
 	struct FeaturedMemHook {
@@ -336,7 +343,7 @@ public:
 	};
 
 	struct LinkNRef {
-		FFJSON* m_pRef;
+		FFJSON* m_pRef=0;
 		string m_sLink;
 	};
 
@@ -394,7 +401,7 @@ public:
 	 * Emptys the FFJSON object. For example If you want delete objects in an 
 	 * array or an object, invoke it.
 	 */
-	void freeObj();
+	void freeObj(bool bAssignment=false);
 
 	static const FeaturedMemType m_FM_LAST = FM_PARENT;
 	static const char OBJ_STR[10][15];
@@ -404,7 +411,7 @@ public:
 
 	void insertFeaturedMember(FeaturedMember& fms, FeaturedMemType fMT);
 	FeaturedMember getFeaturedMember(FeaturedMemType fMT) const;
-	void destroyAllFeaturedMembers();
+	void destroyAllFeaturedMembers(bool bExemptQueries=false);
 	void deleteFeaturedMember(FeaturedMemType fmt);
 
 	/**
@@ -530,12 +537,14 @@ public:
 	Iterator find(string key);
 
 	void headTheHeader(FFJSONPrettyPrintPObj& lfpo);
+    
+    void SelfTest();
 
 	FFJSON& operator[](const char* prop);
 	FFJSON& operator[](string prop);
 	FFJSON& operator[](int index);
 
-	/**
+    /**
 	 * returns null FFJSON object if invalid pointer. Deletes the object on
 	 * deleting this FFJSON object if its the last reference.
 	 * @param t pointer to any object
@@ -544,11 +553,14 @@ public:
 	template <typename T>
 	FFJSON& operator=(T const& t) {
 		freeObj();
-		size = sizeof (T);
+        ffl_debug(FFJ_MAIN,"size:%d",sizeof(T));
+        cout<<sizeof(T)<<endl;
+        size = sizeof (T);
 		val.vptr = new T(t);
 		setType(BINARY);
+        return *this;
 	}
-	FFJSON& operator=(const char* s);
+    FFJSON& operator=(const char* s);
 	FFJSON& operator=(const string& s);
 	FFJSON& operator=(const int& i);
 	FFJSON& operator=(const unsigned int& i);
@@ -561,6 +573,8 @@ public:
 
 	template<typename T>
 	operator T&() {
+        ffl_debug(FFJ_MAIN,"size:%d",sizeof(T));
+        cout<<sizeof(T)<<endl;
         if (isType(BINARY) && size == sizeof(T)) {
 			return *reinterpret_cast<T*> (val.vptr);
 		}
@@ -595,9 +609,5 @@ private:
 };
 
 ostream& operator<<(ostream& out, const FFJSON& f);
-
-enum FFJ_LOG {
-	FFJ_MAIN
-};
 
 #endif
