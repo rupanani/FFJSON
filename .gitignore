@@ -1,14 +1,14 @@
 .bzrignore
 .bzr/
 build/
-QtBuild/
+buildQt/
 BuildXcode/
 *.user
 dist/
 nbproject/private/private.xml
 .DS_Store
 ._.DS_Store
-.dep.inc
+**/.dep.inc
 nbproject/.DS_Store
 
 nbproject/private/
