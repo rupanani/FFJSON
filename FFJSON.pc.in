@@ -5,6 +5,6 @@ libdir=${exec_prefix}/lib
 
 Name: @PROJECT_NAME@
 Description: Logging functions that provides formatting and timestamping
-Version: @base_VERSION_MAJOR@.@base_VERSION_MINOR@
+Version: @FFJSON_VERSION_MAJOR@.@FFJSON_VERSION_MINOR@
 Cflags: -I${includedir}
 Libs: -L${libdir} -l@PROJECT_NAME@
