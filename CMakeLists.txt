@@ -27,7 +27,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14 -O0")
 set (GCC_COVERAGE_LINK_FLAGS "")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} "/usr/local/include/ferryfair")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} "${CMAKE_INSTALL_INCLUDEDIR}/ferryfair")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 file(GLOB HEADERS *.h)
