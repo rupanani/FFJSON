@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
+include(GNUInstallDirs)
 project (FFJSON)
 IF (DEFINED _DEBUG)
 ADD_DEFINITIONS(-D_DEBUG=${_DEBUG})
@@ -27,7 +28,6 @@ include_directories("${PROJECT_BINARY_DIR}")
 set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14 -O0")
 set (GCC_COVERAGE_LINK_FLAGS "")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} "/usr/local/include/ferryfair")
-link_directories(/usr/local/lib)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 file(GLOB HEADERS *.h)
@@ -53,12 +53,12 @@ set_target_properties(FFJSONStatic
     VERSION ${FFJSON_VERSION_MAJOR}.${FFJSON_VERSION_MINOR}
     SOVERSION ${FFJSON_VERSION_MAJOR}
     )
-install(TARGETS ${PROJECT_NAME} DESTINATION lib)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${HEADERS} DESTINATION include/${Umbrella})
 install(FILES "${PROJECT_BINARY_DIR}/FFJSONConfig.h"
     DESTINATION include/${Umbrella})
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc"
-    DESTINATION lib/pkgconfig
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     RENAME "lib${PROJECT_NAME}.pc")
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc"
     DESTINATION share/pkgconfig

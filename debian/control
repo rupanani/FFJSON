@@ -1,0 +1,24 @@
+Source: ffjson
+Priority: optional
+Maintainer: Satya Gowtham Kudupudi <satyagowtham.k@gmail.com>
+Build-Depends: debhelper (>= 9), cmake, base-dev, logger-dev
+Standards-Version: 3.9.7
+Section: non-free/libs
+Homepage: https://github.com/necktwi/FFJSON
+Vcs-Git: https://github.com/necktwi/FFJSON.git
+Vcs-Browser: https://github.com/necktwi/FFJSON
+
+Package: ffjson-dev
+Section: non-free/libdevel
+Architecture: any
+Depends: ffjson1 (= ${binary:Version}), ${misc:Depends}, base1, logger1
+Description: ffjson from ferryfair.com
+ access json name-value pairs with C++ array subscript operator. build a json database
+
+Package: ffjson1
+Section: non-free/libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},  base1, logger1
+Description: ffjson from ferryfair.com
+ access json name-value pairs with C++ array subscript operator. build a json database
+

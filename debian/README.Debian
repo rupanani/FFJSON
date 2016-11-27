@@ -1,0 +1,7 @@
+base for Debian
+---------------
+
+Use `pkg-config --cflags base` in gcc to include header files in your program.
+Use `pkg-config --libs base` while linking 
+
+ -- Satya Gowtham Kudupudi <satyagowtham.k@gmail.com>  Sat, 06 Sep 2014 14:13:37 +0530
