@@ -1,5 +1,0 @@
-linux-vdso 1 linux-vdso
-libstdc++ 6 libstdc++
-libgcc_s 1 libgcc_s
-libc 6 libc
-libm 6 libm
