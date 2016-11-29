@@ -7,6 +7,10 @@ ENDIF()
 set (VERSION_MAJOR 1)
 set (VERSION_MINOR 0)
 set (Umbrella "ferryfair")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+# Mac OS X specific code
+SET(macOS ON)
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
