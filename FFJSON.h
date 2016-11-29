@@ -11,7 +11,7 @@
 #define MAX_ORDERED_MEMBERS 1000
 #define MAX_MEM_ITER_UPDATE 100
 #include <logger.h>
-#include <base/FerryTimeStamp.h>
+#include <ferrybase/FerryTimeStamp.h>
 #include <string>
 #include <iostream>
 #include <vector>

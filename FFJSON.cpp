@@ -23,8 +23,8 @@
 #include <map>
 #include <exception>
 #include <algorithm>
-#include <base/FerryTimeStamp.h>
-#include <base/myconverters.h>
+#include <ferrybase/FerryTimeStamp.h>
+#include <ferrybase/myconverters.h>
 #include <logger.h>
 #include <stdexcept>
 

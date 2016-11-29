@@ -1,3 +1,0 @@
-// the configured options and settings for FFJSON
-#define FFJSON_VERSION_MAJOR @FFJSON_VERSION_MAJOR@
-#define FFJSON_VERSION_MINOR @FFJSON_VERSION_MINOR@

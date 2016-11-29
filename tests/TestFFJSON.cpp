@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <logger.h>
-#include <base/FerryTimeStamp.h>
-#include <base/mystdlib.h>
+#include <ferrybase/FerryTimeStamp.h>
+#include <ferrybase/mystdlib.h>
 #include <string>
 #include <fstream>
 #include <streambuf>
