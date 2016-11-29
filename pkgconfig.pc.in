@@ -1,0 +1,5 @@
+Name: @PROJECT_NAME@
+Description: provides sockets, converters, FerryTimeStamp
+Version: @VERSION_MAJOR@.@VERSION_MINOR@
+Cflags: -I@CMAKE_INSTALL_INCLUDEDIR@
+Libs: -L@CMAKE_INSTALL_LIBDIR@ -l@PROJECT_NAME@
