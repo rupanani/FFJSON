@@ -23,6 +23,7 @@ configure_file(
     )
 
 set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14")
+set (GCC_COVERAGE_LINK_FLAGS "-Wl,-unresolved-symbols=ignore-in-shared-libs")
 IF (DEFINED _DEBUG)
 set (GCC_COVERAGE_COMPILE_FLAGS "${GCC_COVERAGE_COMPILE_FLAGS} -g -O0")
 set (GCC_COVERAGE_LINK_FLAGS "${GCC_COVERAGE_LINK_FLAGS} -g -O0")
@@ -45,8 +46,8 @@ set_target_properties(${PROJECT_NAME}Static
     VERSION ${VERSION_MAJOR}.${VERSION_MINOR}
     SOVERSION ${VERSION_MAJOR}
     )
-target_link_libraries(${PROJECT_NAME}Static logger ferrybase xml2 pthread ssl crypto z rt)
-target_link_libraries(${PROJECT_NAME} logger ferrybase xml2 pthread ssl crypto z rt)
+target_link_libraries(${PROJECT_NAME}Static logger ferrybase)
+target_link_libraries(${PROJECT_NAME} logger ferrybase)
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS ${PROJECT_NAME}Static DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${Umbrella})
@@ -78,20 +79,14 @@ add_executable(TestFFJSON
     UpdateTest.json
     example.json
     )
-target_link_libraries(TestFFJSON FFJSON logger ferrybase ssl pthread xml2 crypto z)
-if(!macOS)
-target_link_libraries(TestFFJSON rt)
-endif(!macOS)
+target_link_libraries(TestFFJSON FFJSON logger ferrybase)
 target_include_directories(TestFFJSON PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/${Umbrella}>
     )
 
 add_executable(IteratorIncrement tests/iteratorincrement.cpp)
-target_link_libraries(IteratorIncrement FFJSON logger ferrybase ssl pthread xml2 crypto z)
-if(!macOS)
-target_link_libraries(IteratorIncrement rt)
-endif(!macOS)
+target_link_libraries(IteratorIncrement FFJSON logger ferrybase)
 target_include_directories(IteratorIncrement PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/${Umbrella}>
