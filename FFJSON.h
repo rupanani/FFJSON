@@ -74,7 +74,9 @@ public:
 		ONE_SHORT_LAST_LN = 1 << 22, //STRING //NO_FM
 
 		HAS_CHILDREN = 1 << 23, //ARRAY N OBJECT //FM
-		STRING_INIT = 1 << 23 //STRING //FM
+		STRING_INIT = 1 << 23, //STRING //FM
+        
+        FILE = 1 << 24 //FILE //FM
 	};
 
 	enum COPY_FLAGS : uint32_t {
@@ -93,7 +95,8 @@ public:
 		FM_CHILDREN = 4,
 		FM_MAP_SEQUENCE = 5,
 		FM_MULTI_LN = 6,
-        FM_UPDATE_TIMESTAMP = 7
+        FM_UPDATE_TIMESTAMP = 7,
+        FM_FILE =8
 	};
 
 	class Exception : exception {
@@ -241,6 +244,10 @@ public:
 		 * Its a vector of names in a map for the order
 		 */
 		vector<map<string, FFJSON*>::iterator>* m_pvpsMapSequence;
+        /**
+         * file name
+         */
+        char* m_sFileName;
 
 		FeaturedMember() : link{
 			NULL
@@ -529,6 +536,8 @@ public:
 	void erase(int index);
 
 	void erase(FFJSON* value);
+    
+    int Save();
 
 	Iterator begin();
 

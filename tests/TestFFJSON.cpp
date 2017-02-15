@@ -338,6 +338,18 @@ void test12() {
 	}
 }
 
+void test13() {
+    cout << "===================================================" << endl;
+    cout << "                       save file					" << endl;
+    cout << "===================================================" << endl;
+    FFJSON& f=*new FFJSON("file://savedfile.ffjson");
+    f["test"]="OK";
+    f.Save();
+    FFJSON ff("file://savedfile.ffjson");
+    cout << ff << endl;
+    cout << getStdoutFromCommand("date") << endl;
+}
+
 //void test1() {
 //	std::cout << "mytest1" << std::endl;
 //}
@@ -358,91 +370,98 @@ int main(int argc, char** argv) {
     FerryTimeStamp ftsSuiteEnd;
     ftsSuiteStart.Update();
 
-	std::cout << "%TEST_STARTED% test1 (TestFFJSON)" << std::endl;
-	ftsStart.Update();
-	test1();
-    ftsEnd.Update();
-	ftsDiff = ftsEnd-ftsStart;
-	std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test1 (TestFFJSON)" << std::endl;
+//	std::cout << "%TEST_STARTED% test1 (TestFFJSON)" << std::endl;
+//	ftsStart.Update();
+//	test1();
+//    ftsEnd.Update();
+//	ftsDiff = ftsEnd-ftsStart;
+//	std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test1 (TestFFJSON)" << std::endl;
 
-	std::cout << "%TEST_STARTED% test2 (TestFFJSON)\n" << std::endl;
+//	std::cout << "%TEST_STARTED% test2 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test2();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test2 (TestFFJSON)" << std::endl;
+
+//	std::cout << "%TEST_STARTED% test3 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test3();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test3 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test4 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test4();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test4 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test5 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test5();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test5 " << std::endl;
+
+//    std::cout << "%TEST_STARTED% test6 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test6();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test6 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test7 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test7();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test7 " << std::endl;
+
+
+//	std::cout << "%TEST_STARTED% test8 (TestFFJSON)\n" << std::endl;
+//    ftsStart.Update();
+//    test8();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test8 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test9\n" << std::endl;
+//    ftsStart.Update();
+//    test9();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test9 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test10\n" << std::endl;
+//    ftsStart.Update();
+//    test10();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test10 " << std::endl;
+
+//	std::cout << "%TEST_STARTED% test11\n" << std::endl;
+//    ftsStart.Update();
+//    test11();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd-ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test11 " << std::endl;
+
+//    std::cout << "%TEST_STARTED% test12\n" << std::endl;
+//    ftsStart.Update();
+//    test12();
+//    ftsEnd.Update();
+//    ftsDiff = ftsEnd - ftsStart;
+//    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test12 " << std::endl;
+
+    std::cout << "%TEST_STARTED% test13\n" << std::endl;
     ftsStart.Update();
-    test2();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test2 (TestFFJSON)" << std::endl;
-
-	std::cout << "%TEST_STARTED% test3 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test3();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test3 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test4 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test4();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test4 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test5 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test5();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test5 " << std::endl;
-
-    std::cout << "%TEST_STARTED% test6 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test6();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test6 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test7 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test7();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test7 " << std::endl;
-
-
-	std::cout << "%TEST_STARTED% test8 (TestFFJSON)\n" << std::endl;
-    ftsStart.Update();
-    test8();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test8 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test9\n" << std::endl;
-    ftsStart.Update();
-    test9();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test9 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test10\n" << std::endl;
-    ftsStart.Update();
-    test10();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test10 " << std::endl;
-
-	std::cout << "%TEST_STARTED% test11\n" << std::endl;
-    ftsStart.Update();
-    test11();
-    ftsEnd.Update();
-    ftsDiff = ftsEnd-ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test11 " << std::endl;
-
-    std::cout << "%TEST_STARTED% test12\n" << std::endl;
-    ftsStart.Update();
-    test12();
+    test13();
     ftsEnd.Update();
     ftsDiff = ftsEnd - ftsStart;
-    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test12 " << std::endl;
-
+    std::cout << "%TEST_FINISHED% time=" << ftsDiff << " test13 " << std::endl;
+    
     ftsSuiteEnd.Update();
 	ftsDiff = ftsSuiteEnd-ftsSuiteStart;
 	std::cout << "%SUITE_FINISHED% time=" << ftsDiff << std::endl;

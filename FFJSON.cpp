@@ -888,7 +888,11 @@ ObjBackyard:
 						}
 						if (path.length() > 0) {
 							ifstream ifs(path.c_str(), ios::in | ios::ate);
-							if (ifs.is_open()) {
+                            setEFlag(FILE);
+                            FeaturedMember fm;fm.m_sFileName = new char[path.length()+1];
+                            strcpy(fm.m_sFileName, path.c_str());
+                            insertFeaturedMember(fm, FM_FILE);
+                            if (ifs.is_open()) {
 								string ffjsonStr;
 								strObjMapInit();
 								ifs.seekg(0, ios::end);
@@ -913,7 +917,8 @@ ObjBackyard:
 								ifs.seekg(0, ios::beg);
 								ffjsonStr.append((istreambuf_iterator<char>(ifs)),
 										istreambuf_iterator<char>());
-								if (t) {
+                                ifs.close();
+                                if (t) {
 									init(ffjsonStr, 0, -1);
 								} else {
 									init(ffjsonStr);
@@ -1312,6 +1317,32 @@ void FFJSON::insertFeaturedMember(FeaturedMember& fms, FeaturedMemType fMT) {
         }
         iFMTraversed++;
     }
+    if (isEFlagSet(FILE)) {
+        if (fMT == FM_FILE) {
+            if (!pFMS->m_sFileName) {
+                pFMS->m_sFileName = fms.m_sFileName;
+            } else {
+                FeaturedMemHook* pNewFMH = new FeaturedMemHook();
+                pNewFMH->m_pFMH.m_pFMH = pFMS->m_pFMH;
+                pNewFMH->m_uFM.m_sFileName = fms.m_sFileName;
+                pFMS->m_pFMH = pNewFMH;
+            }
+            iFMCount++;
+            setFMCount(iFMCount);
+            return;
+        } else {
+            if (iFMCount - iFMTraversed == 1) {
+                //Should insert New FM hook before the right FMType match
+                FeaturedMemHook* pNewFMH = new FeaturedMemHook();
+                pNewFMH->m_uFM.m_sFileName = pFMS->m_sFileName;
+                pFMS->m_pFMH = pNewFMH;
+                pFMS = &pNewFMH->m_pFMH;
+            } else {
+                pFMS = &pFMS->m_pFMH->m_pFMH;
+            }
+        }
+        iFMTraversed++;
+    }
 }
 
 FFJSON::FeaturedMember FFJSON::getFeaturedMember(FeaturedMemType fMT) const {
@@ -1448,7 +1479,23 @@ FFJSON::FeaturedMember FFJSON::getFeaturedMember(FeaturedMemType fMT) const {
         }
         iFMTraversed++;
     }
-	return decoyFM;
+    if (isEFlagSet(FILE)) {
+        if (fMT == FM_FILE) {
+            if (iFMCount - iFMTraversed == 1) {
+                return *pFMS;
+            } else {
+                return pFMS->m_pFMH->m_uFM;
+            }
+        } else {
+            if (iFMCount - iFMTraversed == 1) {
+                return decoyFM;
+            } else {
+                pFMS = &pFMS->m_pFMH->m_pFMH;
+            }
+        }
+        iFMTraversed++;
+    }
+    return decoyFM;
 }
 
 void DeleteChildLinks(vector<FFJSON*>* childLinks) {
@@ -1556,6 +1603,18 @@ void FFJSON::destroyAllFeaturedMembers(bool bExemptQueries) {
             delete pFMHHolder;
         }
         iFMCount--;
+    }
+    if (isEFlagSet(FILE)) {
+        if (iFMCount == 1) {
+            delete[] m_uFM.m_sFileName;
+        } else {
+            delete[] m_uFM.m_pFMH->m_uFM.m_sFileName;
+            FeaturedMemHook* pFMHHolder = m_uFM.m_pFMH;
+            m_uFM = m_uFM.m_pFMH->m_pFMH;
+            delete pFMHHolder;
+        }
+        iFMCount--;
+        clearEFlag(FILE);
     }
     setFMCount(iFMCount);
 }
@@ -1678,6 +1737,24 @@ void FFJSON::deleteFeaturedMember(FeaturedMemType fmt) {
 		pfmPre = pFMS;
 		iFMTraversed++;
 	}
+    if (isEFlagSet(FILE)) {
+        if (fmt == FILE) {
+            if (iFMCount - iFMTraversed == 1) {
+                delete[] pFMS->m_sFileName;
+                if (pfmPre) {
+                    *pfmPre = pfmPre->m_pFMH->m_uFM;
+                }
+            } else {
+                delete[] pFMS->m_pFMH->m_uFM.m_sFileName;
+                FeaturedMember* pTempFMS = &pFMS->m_pFMH->m_pFMH;
+                delete pFMS->m_pFMH;
+                *pFMS = *pTempFMS;
+            }
+        }
+        pfmPre = pFMS;
+        iFMTraversed++;
+    }
+    
 }
 
 FFJSON * FFJSON::returnNameIfDeclared(vector<string>& prop,
@@ -4102,4 +4179,19 @@ FFJSON::LinkNRef FFJSON::GetLinkString(FFJSONPObj* pObj) {
 		pObj = pObj->pObj;
 	}
 	return lnr;
+}
+
+int FFJSON::Save(){
+    if(isEFlagSet(FILE)){
+        const char* fn=getFeaturedMember(FM_FILE).m_sFileName;
+        ofstream ofs(fn, ios::out|ios::trunc);
+        if(ofs.is_open()){
+            string sOut = prettyString();
+            ofs << sOut;
+            ofs.close();
+            return sOut.length();
+        }
+        return -2;
+    }
+    return -1;
 }
