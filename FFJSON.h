@@ -54,7 +54,7 @@ public:
 		NONE = 0 << 8,
 		QUERY = 1 << 8,
 		SET = 2 << 8,
-		DELETE = 3 << 8,
+		DEL = 3 << 8,
 		UPDATE = 4 << 8
 	};
 
@@ -376,7 +376,6 @@ public:
 	 */
 	FFJSON();
 
-	enum COPY_FLAGS : uint32_t;
 	class FFJSONPObj;
 	/**
 	 * Copy constructor. Creates a copy of FFJSON object

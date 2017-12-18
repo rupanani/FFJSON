@@ -950,7 +950,7 @@ ObjBackyard:
 						ffjson[i + 3] == 'e' &&
 						ffjson[i + 4] == 't' &&
 						ffjson[i + 5] == 'e') {
-					setQType(DELETE);
+					setQType(DEL);
 					i += 6;
 				}
 				goto backyard;
@@ -2094,7 +2094,7 @@ string FFJSON::stringify(bool json, bool bGetQueryStr,
 	if (bGetQueryStr) {
 		if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else if (isQType(SET) || isType(OBJECT) || isType(ARRAY)) {
 		} else {
@@ -2294,7 +2294,7 @@ string FFJSON::stringify(bool json, bool bGetQueryStr,
 			if (!isQType(NONE)) {
 				if (isQType(QUERY)) {
 					return "?";
-				} else if (isQType(DELETE)) {
+				} else if (isQType(DEL)) {
 					return "delete";
 				} else {
 					return "";
@@ -2735,7 +2735,7 @@ string FFJSON::prettyString(bool json, bool printComments, unsigned int indent,
 			if (!isQType(NONE)) {
 				if (isQType(QUERY)) {
 					return "?";
-				} else if (isQType(DELETE)) {
+				} else if (isQType(DEL)) {
 					return "delete";
 				}
 			}
@@ -3168,7 +3168,7 @@ string FFJSON::queryString() {
 			return ("\"" + string(val.string, size) + "\"");
 		} else if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			return "";
@@ -3178,7 +3178,7 @@ string FFJSON::queryString() {
 			return to_string(val.number);
 		} else if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			return "";
@@ -3198,7 +3198,7 @@ string FFJSON::queryString() {
 			}
 		} else if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			return "";
@@ -3212,7 +3212,7 @@ string FFJSON::queryString() {
 			}
 		} else if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			return "";
@@ -3220,7 +3220,7 @@ string FFJSON::queryString() {
 	} else if (isType(OBJ_TYPE::OBJECT)) {
 		if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			string ffs;
@@ -3260,7 +3260,7 @@ string FFJSON::queryString() {
 	} else if (isType(OBJ_TYPE::ARRAY)) {
 		if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			string ffs;
@@ -3301,7 +3301,7 @@ string FFJSON::queryString() {
 	} else if (!isQType(NONE)) {
 		if (isQType(QUERY)) {
 			return "?";
-		} else if (isQType(DELETE)) {
+		} else if (isQType(DEL)) {
 			return "delete";
 		} else {
 			return "";
@@ -3334,7 +3334,7 @@ FFJSON * FFJSON::answerObject(FFJSON * queryObject, FFJSONPObj* pObj,
                 queryObject->init("[]");
         }
         if (isQType(UPDATE)) {
-			if (!queryObject->isQType(DELETE)) {
+			if (!queryObject->isQType(DEL)) {
 				if (pObj->value->isType(OBJECT)) {
 					FFJSON::Iterator itUpdateTime =
                             pObj->value->find(*pObj->name);
@@ -3367,7 +3367,7 @@ FFJSON * FFJSON::answerObject(FFJSON * queryObject, FFJSONPObj* pObj,
 			}
 		}
 	}
-	if (queryObject->isQType(DELETE)) {
+	if (queryObject->isQType(DEL)) {
 		freeObj();
 		setType(NUL);
 	} else if (queryObject->isQType(QUERY)) {
@@ -3908,8 +3908,9 @@ void FFJSON::Iterator::init(const FFJSON& orig, bool end) {
 	}
 }
 
-FFJSON::Iterator & FFJSON::Iterator::operator=(const Iterator & i) {
+FFJSON::Iterator& FFJSON::Iterator::operator=(const Iterator & i) {
 	copy(i);
+  return *this;
 }
 
 string FFJSON::Iterator::GetIndex() {
