@@ -1,8 +1,6 @@
 /* 
- * File:   FFJSON.h
- * Author: Satya Gowtham Kudupudi
- *
- * Created on November 29, 2013, 4:29 PM
+ * Gowtham Kudupudi 29/09/2013
+ * MIT License
  */
 
 #ifndef FFJSON_H
@@ -10,6 +8,8 @@
 
 #define MAX_ORDERED_MEMBERS 1000
 #define MAX_MEM_ITER_UPDATE 100
+
+#include "config.h"
 #include <logger.h>
 #include <ferrybase/FerryTimeStamp.h>
 #include <string>
@@ -28,8 +28,7 @@ enum FFJ_LOG {
     FFJ_MAIN
 };
 
-
-class FFJSON {
+class DLLExport FFJSON {
 public:
 
 	enum OBJ_TYPE : uint8_t {
@@ -76,7 +75,7 @@ public:
 		HAS_CHILDREN = 1 << 23, //ARRAY N OBJECT //FM
 		STRING_INIT = 1 << 23, //STRING //FM
         
-        FILE = 1 << 24 //FILE //FM
+    FILE = 1 << 24 //FILE //FM
 	};
 
 	enum COPY_FLAGS : uint32_t {
@@ -95,8 +94,8 @@ public:
 		FM_CHILDREN = 4,
 		FM_MAP_SEQUENCE = 5,
 		FM_MULTI_LN = 6,
-        FM_UPDATE_TIMESTAMP = 7,
-        FM_FILE =8
+    FM_UPDATE_TIMESTAMP = 7,
+    FM_FILE =8
 	};
 
 	class Exception : exception {

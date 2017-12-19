@@ -3902,7 +3902,7 @@ void FFJSON::Iterator::init(const FFJSON& orig, bool end) {
 		} else {
 			ui.pi = end ? orig.val.pairs->end() : orig.val.pairs->begin();
             m_uContainerPs.m_pMap=orig.val.pairs;
-        }
+    }
 	} else {
 		type = NUL;
 	}
@@ -3935,7 +3935,7 @@ int FFJSON::Iterator::GetIndex(const FFJSON& rCurArray) {
 	}
 }
 
-FFJSON & FFJSON::Iterator::operator*() {
+FFJSON& FFJSON::Iterator::operator*() {
 	if (type == BIG_OBJECT) {
 		return *(ui.pi->second);
 	} else if (type == OBJECT) {
