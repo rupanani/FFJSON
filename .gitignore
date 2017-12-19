@@ -1,8 +1,6 @@
 .bzrignore
 .bzr/
-build/
-buildQt/
-BuildXcode/
+build*/
 *.user
 dist/
 nbproject/private/private.xml
