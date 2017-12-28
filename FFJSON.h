@@ -535,7 +535,7 @@ public:
 
 	void erase(FFJSON* value);
     
-    int Save();
+  int Save();
 
 	Iterator begin();
 
@@ -545,7 +545,7 @@ public:
 
 	void headTheHeader(FFJSONPrettyPrintPObj& lfpo);
     
-    void SelfTest();
+  void SelfTest();
 
 	FFJSON& operator[](const char* prop);
 	FFJSON& operator[](string prop);
@@ -567,7 +567,7 @@ public:
 		setType(BINARY);
         return *this;
 	}
-    FFJSON& operator=(const char* s);
+  FFJSON& operator=(const char* s);
 	FFJSON& operator=(const string& s);
 	FFJSON& operator=(const int& i);
 	FFJSON& operator=(const unsigned int& i);

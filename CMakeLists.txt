@@ -100,7 +100,8 @@ install(FILES "${PROJECT_BINARY_DIR}/pkgconfig.pc"
   RENAME "${PROJECT_NAME}.pc"
 )
 
-if (DEFINED BUILD_TESTS)
+if (BUILD_TESTS)
+  message("${PROJECT_NAME}: BUILD_TESTS: ${BUILD_TESTS}")
   include(CTest)
   #set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14")
   #set (GCC_COVERAGE_LINK_FLAGS "-lFFJSON -lbase -llogger")

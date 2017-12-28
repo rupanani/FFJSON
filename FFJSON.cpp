@@ -867,7 +867,7 @@ ObjBackyard:
 						&& ffjson[i + 2] == '/') {
 					if (ffjson[i - 1] == 'e' && ffjson[i - 2] == 'l' &&
 							ffjson[i - 3] == 'i' && ffjson[i - 4] == 'f'
-							&& (ffjson[i - 5] < 'a' || ffjson[i - 5] > 'z')) {
+							&& (i <= 5 || (ffjson[i - 5] < 'a' || ffjson[i - 5] > 'z'))) {
 						i += 3;
 						string path;
 						string objCaster;

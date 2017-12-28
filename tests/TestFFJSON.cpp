@@ -104,9 +104,9 @@ void test1() {
 	std::cout << "size of pointer: " << sizeof (int *) << std::endl;
 
 	ffo2["amphibians"]["frogs"].setQType(FFJSON::QUERY_TYPE::QUERY);
-	ffo2["amphibians"]["salamanders"].setQType(FFJSON::QUERY_TYPE::DELETE);
+	ffo2["amphibians"]["salamanders"].setQType(FFJSON::QUERY_TYPE::DEL);
 	ffo2["amphibians"]["genome"].setQType(FFJSON::QUERY_TYPE::SET);
-	ffo2["birds"][1].setQType(FFJSON::QUERY_TYPE::DELETE);
+	ffo2["birds"][1].setQType(FFJSON::QUERY_TYPE::DEL);
 	ffo2["birds"][2].setQType(FFJSON::QUERY_TYPE::SET);
 	ffo2["birds"][3].setQType(FFJSON::QUERY_TYPE::QUERY);
 	string query = ffo2.queryString();
@@ -347,7 +347,7 @@ void test13() {
     f.Save();
     FFJSON ff("file://savedfile.ffjson");
     cout << ff << endl;
-    cout << getStdoutFromCommand("date") << endl;
+    //cout << getStdoutFromCommand("date") << endl;
 }
 
 //void test1() {
