@@ -1,8 +1,13 @@
-// the configured options and settings for Tutorial
+#ifndef CONFIG_H
+#define CONFIG_H
 #define @PROJECT_NAME@_VERSION_MAJOR @VERSION_MAJOR@
 #define @PROJECT_NAME@_VERSION_MINOR @VERSION_MINOR@
 
-#ifdef _WIN64 || _WIN32
+#if defined(_WIN64) || defined(_WIN32)
 #define DLLExport   __declspec( dllexport )
-#define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING
+#else
+#define DLLExport
 #endif
+#define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING
+#endif CONFIG_H
+
