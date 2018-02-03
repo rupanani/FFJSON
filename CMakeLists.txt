@@ -1,6 +1,9 @@
+# list does not recognize sub-command FILTER for version 3.5
 cmake_minimum_required (VERSION 3.6)
 include(GNUInstallDirs)
 project (FFJSON)
+message ("Generating build procedure for ${PROJECT_NAME} ...")
+
 if (DEFINED _DEBUG)
 ADD_DEFINITIONS(-D_DEBUG=${_DEBUG})
 endif()
@@ -42,7 +45,9 @@ configure_file(
 )
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIC")
 
 if (NOT macOS)
