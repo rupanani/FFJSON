@@ -4,6 +4,14 @@ include(GNUInstallDirs)
 project (FFJSON)
 message ("Generating build procedure for ${PROJECT_NAME} ...")
 
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../FFJSON")
+   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../logger
+      ${CMAKE_CURRENT_SOURCE_DIR}/../logger/build)
+   if (NOT TARGET ferrybase)
+      add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase
+         ${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase/build)
+   endif ()
+endif ()
 if (DEFINED _DEBUG)
 ADD_DEFINITIONS(-D_DEBUG=${_DEBUG})
 endif()
@@ -60,7 +68,7 @@ file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.h)
 file(GLOB SOURCES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.cpp)
 list(FILTER HEADERS EXCLUDE REGEX "^\\..+")
 list(FILTER SOURCES EXCLUDE REGEX "^\\..+")
-list(APPEND HEADERS "config.h.in")
+list(APPEND HEADERS "config.h.in" ${PROJECT_BINARY_DIR}/config.h)
 include_directories(${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${Umbrella}
 )

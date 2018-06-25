@@ -9,5 +9,5 @@
 #define DLLExport
 #endif
 #define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING
-#endif CONFIG_H
+#endif //CONFIG_H
 
