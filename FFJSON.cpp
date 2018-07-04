@@ -30,10 +30,12 @@
 
 #include "FFJSON.h"
 
+#if defined(_WIN64) || defined(_WIN32)
 #ifndef INIT_LOGGER
 FF_LOG_TYPE fflAllowedType = (FF_LOG_TYPE) (FFL_NOTICE | FFL_WARN | FFL_ERR |
 		FFL_DEBUG);
 unsigned int fflAllowedLevel = FFJ_MAIN;
+#endif
 #endif
 
 using namespace std;
