@@ -5,8 +5,10 @@ project (FFJSON)
 message ("Generating build procedure for ${PROJECT_NAME} ...")
 
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../FFJSON")
-   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../logger
-      ${CMAKE_CURRENT_SOURCE_DIR}/../logger/build)
+   if (NOT TARGET logger)
+      add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../logger
+         ${CMAKE_CURRENT_SOURCE_DIR}/../logger/build)
+   endif ()
    if (NOT TARGET ferrybase)
       add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase
          ${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase/build)
