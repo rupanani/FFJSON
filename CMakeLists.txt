@@ -4,14 +4,25 @@ include(GNUInstallDirs)
 project (FFJSON)
 message ("Generating build procedure for ${PROJECT_NAME} ...")
 
+message ("Extropolating build type ...")
+string (REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" SRC_RLTV_BLD_DIR
+   ${PROJECT_BINARY_DIR}
+)
+message ("SRC_RLTV_BLD_DIR: ${SRC_RLTV_BLD_DIR}")
+string (REPLACE "/Build" "" BUILD_TARGET ${SRC_RLTV_BLD_DIR})
+if (${SRC_RLTV_BLD_DIR})
+   string (REPLACE "/build" "" BUILD_TARGET ${BUILD_TARGET})
+endif ()
+message ("BUILD_TARGET: ${BUILD_TARGET}")
+
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../FFJSON")
    if (NOT TARGET logger)
       add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../logger
-         ${CMAKE_CURRENT_SOURCE_DIR}/../logger/build)
+         ${CMAKE_CURRENT_SOURCE_DIR}/../logger/Build${BUILD_TARGET})
    endif ()
    if (NOT TARGET ferrybase)
       add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase
-         ${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase/build)
+         ${CMAKE_CURRENT_SOURCE_DIR}/../ferrybase/Build${BUILD_TARGET})
    endif ()
 endif ()
 if (DEFINED _DEBUG)
@@ -80,11 +91,11 @@ include_directories (
 )
 link_directories("${CMAKE_INSTALL_FULL_LIBDIR}")
 if(CMAKE_CONFIGURATION_TYPES)
-   link_directories("../ferrybase/build/$(ConfigurationName)")
-   link_directories("../logger/build/$(ConfigurationName)")
+   link_directories("../ferrybase/Build${BUILD_TARGET}/$(ConfigurationName)")
+   link_directories("../logger/Build${BUILD_TARGET}/$(ConfigurationName)")
 else(CMAKE_CONFIGURATION_TYPES)
-   link_directories("../ferrybase/build")
-   link_directories("../logger/build")
+   link_directories("../ferrybase/Build")
+   link_directories("../logger/Build")
 endif()
 MESSAGE("CMAKE_INSTALL_FULL_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 MESSAGE("CMAKE_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR}")
@@ -120,9 +131,9 @@ if (BUILD_TESTS)
    include(CTest)
    #set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14")
    #set (GCC_COVERAGE_LINK_FLAGS "-lFFJSON -lbase -llogger")
-   #include_directories(${CMAKE_CURRENT_SOURCE_DIR} "/usr/local/include/ferryfair")
-   #link_directories(${PROJECT_BINARY_DIR})
-   #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+   #include_directories (${CMAKE_CURRENT_SOURCE_DIR} "/usr/local/include/ferryfair")
+   #link_directories (${PROJECT_BINARY_DIR})
+   #set (CMAKE_CXX_FLAGS "${GCC_COVERAGE_COMPILE_FLAGS}")
    #set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
    add_executable(TestFFJSON
@@ -152,8 +163,10 @@ if (BUILD_TESTS)
       ${CMAKE_CURRENT_SOURCE_DIR}
       ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${Umbrella}
    )
+   add_executable(test_ambiguity tests/test_ambiguity.cpp)
 
    add_test(test1 TestFFJSON)
    add_test(test2 IteratorIncrement)
+   add_test(test3 test_ambiguity)
 endif()
 

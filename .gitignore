@@ -1,6 +1,7 @@
 .bzrignore
 .bzr/
-build*/
+**/build*/
+**/Build*/
 *.user
 dist/
 nbproject/private/private.xml
