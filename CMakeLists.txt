@@ -148,7 +148,7 @@ if (BUILD_TESTING)
       ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${Umbrella}
    )
    add_custom_command(TARGET TestFFJSON PRE_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_directory
+      COMMAND ${CMAKE_COMMAND} -E copy
       ${CMAKE_SOURCE_DIR}/sample.ffjson $<TARGET_FILE_DIR:TestFFJSON>
    )
    message("INSTALL_INTERFACE:include/${Umbrella}:"
