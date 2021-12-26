@@ -19,3 +19,6 @@ nbactions.xml
 nb-configuration.xml
 
 vgcore.*
+
+# VS
+.vs/

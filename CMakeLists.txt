@@ -123,7 +123,7 @@ install(FILES "${PROJECT_BINARY_DIR}/pkgconfig.pc"
    RENAME "${PROJECT_NAME}.pc"
 )
 
-if (BUILD_TESTS)
+if (BUILD_TESTING)
    message("${PROJECT_NAME}: BUILD_TESTS: ${BUILD_TESTS}")
    include(CTest)
    #set (GCC_COVERAGE_COMPILE_FLAGS "-std=c++14")
